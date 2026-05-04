@@ -1,0 +1,17 @@
+[tool.briefcase]
+project_name = "aCrawler"
+bundle = "com.example"
+version = "1.0.0"
+url = "https://example.com/acrawler"
+license.text = "BSD-3-Clause"
+author = "Your Name"
+author_email = "your.email@example.com"
+
+[tool.briefcase.app.acrawler]
+formal_name = "aCrawler"
+description = "Enhanced Web Crawler"
+sources = ["src/acrawler"]
+requires = ["requests", "beautifulsoup4", "tldextract", "lxml"]
+
+[tool.briefcase.app.acrawler.macOS]
+universal_build = true

@@ -1,4 +1,4 @@
-name: Build macOS App with Briefcase
+name: Build macOS App
 
 on:
   push:
@@ -17,18 +17,30 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Briefcase
-        run: pip install briefcase
-
-      - name: Build macOS App
+      - name: Install Dependencies
         run: |
-          cd acrawler_app
-          briefcase create macOS
-          briefcase build macOS
-          briefcase package macOS
+          pip install pyinstaller requests beautifulsoup4 tldextract lxml
+
+      - name: Build macOS App with PyInstaller
+        run: |
+          pyinstaller --noconfirm --windowed --name "aCrawler" acrawler.py
+
+      - name: Create DMG
+        run: |
+          brew install create-dmg
+          create-dmg \
+            --volname "aCrawler" \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon "aCrawler.app" 175 120 \
+            --hide-extension "aCrawler.app" \
+            --app-drop-link 425 120 \
+            "aCrawler-macOS.dmg" \
+            "dist/aCrawler.app"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: aCrawler-macOS
-          path: acrawler_app/macOS/**/*.dmg
+          path: aCrawler-macOS.dmg
